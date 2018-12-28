@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'Jinkey'
 
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
@@ -8,49 +7,40 @@ import keras as krs
 BINARY_FLAG = "binary"
 MULTI_FLAG = "multi"
 
-def load_data(catalogue=BINARY_FLAG):
+def read_file(label, file_name):
     titles = []
-    print("正在加载健康类别的数据...")
-    with open("data/health.txt", "r") as f:
+    print("正在加载`{}`的数据...".format(label))
+    with open(file_name, "r") as f:
         for line in f.readlines():
+            if not line or not line.strip():
+                continue
             titles.append(line.strip())
-
-    print("正在加载科技类别的数据...")
-    with open("data/tech.txt", "r") as f:
-        for line in f.readlines():
-            titles.append(line.strip())
-
-    if catalogue == MULTI_FLAG:
-        print("正在加载设计类别的数据...")
-        with open("data/design.txt", "r") as f:
-            for line in f.readlines():
-                titles.append(line.strip())
-
-    print("一共加载了 %s 个标题" % len(titles))
-
     return titles
 
+def load_data_label():
+    file_label_path = [
+        ('健康类', 'data/health.txt'),
+        ('科技类', 'data/tech.txt'),
+        ('设计类', 'data/design.txt'),
+    ]
 
-def load_label(catalogue=BINARY_FLAG):
-    if catalogue == BINARY_FLAG:
-        arr0 = np.zeros(shape=[12000, ])
-        arr1 = np.ones(shape=[12000, ])
-        target = np.hstack([arr0, arr1])
-        print("一共加载了 %s 个标签" % target.shape)
-        return target
-    elif catalogue == MULTI_FLAG:
-        arr0 = np.zeros(shape=[12000, ])  # array([0., 0., 0., ..., 0., 0., 0.])
-        arr1 = np.ones(shape=[12000, ])  # array([1., 1., 1., ..., 1., 1., 1.])
-        arr2 = np.array([2]).repeat(7318)  # array([2, 2, 2, ..., 2, 2, 2])
-        target = np.hstack([arr0, arr1, arr2])  # array([0., 0., 0., ..., 1., 1., 1., ..., 2., 2., 2.])
-        print("一共加载了 %s 个标签" % target.shape)
+    array_list = []
+    all_titles = []
+    for index, (label, file_name) in enumerate(file_label_path):
+        titles = read_file(label, file_name)
+        all_titles.extend(titles)
+        arr = np.array([index]).repeat(len(titles))  # [index] * len(titles)
+        array_list.append(arr)
 
-        encoder = LabelEncoder()
-        encoder.fit(target)
-        encoded_target = encoder.transform(target)
-        dummy_target = krs.utils.np_utils.to_categorical(encoded_target)
+    target = np.hstack(array_list)  # array([0., 0., 0., ..., 1., 1., 1., ..., 2., 2., 2.])
+    print("一共加载了 %s 个标签" % target.shape)
 
-        return dummy_target
+    encoder = LabelEncoder()
+    encoder.fit(target)
+    encoded_target = encoder.transform(target)
+    dummy_target = krs.utils.np_utils.to_categorical(encoded_target)
+
+    return dummy_target, all_titles
 
 
 def build_netword(dict, catalogue=BINARY_FLAG, embedding_size=50, max_sequence_length=30):
