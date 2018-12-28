@@ -1,27 +1,17 @@
-# 下载代码
-git clone https://github.com/Jinkeycode/keras_lstm_chinese_document_classification.git
+
+中文文本分类
 
 # 安装依赖
-pip install -r requirements.txt
-
-# 二分类
-标签形式为[0, 0, 1, 1] 代表分类的四个样本分别为第 0 类和第 1 类
-
-具体代码在 `chinese_binary.py`
-
-# 多分类
-标签形式为[[1, 0, 0], [0, 1, 0], [0, 0, 1]] 代表分类的四个样本分别为第 0 类、第 1 类、第 2 类
-
-具体代码在 `chinese_multi.py`
+pip3 install -r requirements.txt -i http://pypi.douban.com/simple --trusted-host=pypi.douban.com
 
 # 训练
-取消掉这几行的注释即可
 ```
-# 训练模型
-# model.fit(text_processed, target, batch_size=512, epochs=10, )
-# 保存模型
-# model.save("health_and_tech.h5")
+python3 chinese_multi.py train
 ```
 
 # 预测
-sen = "*" 改为 自己的句子
+```
+python3 chinese_multi.py 做好商业设计需要学习的小技巧
+```
+
+[参考](https://github.com/Jinkeycode/keras_lstm_chinese_document_classification.git)

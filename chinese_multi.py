@@ -2,6 +2,7 @@
 # Created by Jinkey on 2018/1/4.
 __author__ = 'Jinkey'
 
+import sys
 import tensorflow as tf
 import jieba as jb
 import numpy as np
@@ -28,17 +29,23 @@ sorted_vocab = sorted(dict.items(), key = lambda x : x[1])
 # 配置网络结构
 model = utils.build_netword(catalogue=utils.MULTI_FLAG, dict=dict, embedding_size=embedding_size, max_sequence_length=max_sequence_length)
 
+if len(sys.argv) > 1 and sys.argv[1] == 'train':
+    # 训练模型
+    model.fit(text_processed, target, batch_size=512, epochs=10, )
+    # 保存模型
+    model.save("health_and_tech_design.h5")
+    exit(0)
 
-# 训练模型
-# model.fit(text_processed, target, batch_size=512, epochs=10, )
-# 保存模型
-# model.save("health_and_tech_design.h5")
+if len(sys.argv) > 1:
+    sen = sys.argv[1]
+else:
+    sen = "做好商业设计需要学习的小技巧"
 
 # 加载预训练的模型
 model.load_weights("health_and_tech_design.h5")
 
 # 预测样本
-sen = "做好商业设计需要学习的小技巧"
+
 sen_prosessed = " ".join(jb.cut(sen, cut_all=True))
 sen_prosessed = vocab_processor.transform([sen_prosessed])
 sen_prosessed = np.array(list(sen_prosessed))

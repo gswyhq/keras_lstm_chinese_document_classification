@@ -39,10 +39,10 @@ def load_label(catalogue=BINARY_FLAG):
         print("一共加载了 %s 个标签" % target.shape)
         return target
     elif catalogue == MULTI_FLAG:
-        arr0 = np.zeros(shape=[12000, ])
-        arr1 = np.ones(shape=[12000, ])
-        arr2 = np.array([2]).repeat(7318)
-        target = np.hstack([arr0, arr1, arr2])
+        arr0 = np.zeros(shape=[12000, ])  # array([0., 0., 0., ..., 0., 0., 0.])
+        arr1 = np.ones(shape=[12000, ])  # array([1., 1., 1., ..., 1., 1., 1.])
+        arr2 = np.array([2]).repeat(7318)  # array([2, 2, 2, ..., 2, 2, 2])
+        target = np.hstack([arr0, arr1, arr2])  # array([0., 0., 0., ..., 1., 1., 1., ..., 2., 2., 2.])
         print("一共加载了 %s 个标签" % target.shape)
 
         encoder = LabelEncoder()
